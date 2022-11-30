@@ -3,14 +3,13 @@ import React, { useMemo } from "react";
 import cn from "classnames";
 
 import styles from "./Board.module.scss";
+import { Box } from "./components";
 
 export const Board = () => {
   const boardBoxes = useMemo(
     () =>
-      [...Array(1000)].map((box, idx) => {
-        return (
-          <div className={cn(styles.box, `col-${idx} flex-center`)}>{idx}</div>
-        );
+      [...Array(10000)].map((box, idx) => {
+        return <Box idx={idx} key={idx} />;
       }),
     []
   );
