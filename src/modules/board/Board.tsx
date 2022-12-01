@@ -32,7 +32,23 @@ export const Board = () => {
           <Box
             idx={idx}
             key={idx}
-            color={idx === number || idx === number+1 || idx === number-1 || idx === number-157 || idx === number+157 ? "red" : ""}
+            color={
+              idx === number ||
+              idx === number + 1 ||
+              idx === number - 1 ||
+              idx === number - 157 ||
+              idx === number + 157 ||
+              idx === number - 158 ||
+              idx === number + 158 ||
+              idx === number - 156 ||
+              idx === number + 156
+                ? "red"
+                : ""
+            }
+            borderRadiusTopLeft={idx === number - 158 ? "15px" : ""}
+            borderRadiusTopRight={idx === number - 156 ? "15px" : ""}
+            borderRadiusBottomLeft={idx === number + 156 ? "15px" : ""}
+            borderRadiusBottomRight={idx === number + 158 ? "15px" : ""}
             onClick={onBoxClicked}
           />
         );
