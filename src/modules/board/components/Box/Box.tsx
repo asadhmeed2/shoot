@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import cn from "classnames";
 
 import styles from "./Box.module.scss";
+import { BoxType } from "modules/board/Board";
 
 type Props = {
   idx: number;
@@ -11,7 +12,7 @@ type Props = {
   borderRadiusTopRight: string;
   borderRadiusBottomLeft: string;
   borderRadiusBottomRight: string;
-  onClick: (idx: number) => void;
+  onClick: (box: BoxType) => void;
 };
 
 export const Box = ({
@@ -26,14 +27,20 @@ export const Box = ({
   const [colorData, setColorData] = useState<string>();
   const onBoxClick = () => {
     if (color) {
-      onClick(idx);
+      onClick({
+        idx,
+        color,
+        borderRadiusTopLeft,
+        borderRadiusTopRight,
+        borderRadiusBottomRight,
+        borderRadiusBottomLeft,
+        onClick,
+      });
     }
   };
 
   //   eff set color data
   useEffect(() => {
-    console.log(color);
-
     setColorData(color);
   }, [color]);
 

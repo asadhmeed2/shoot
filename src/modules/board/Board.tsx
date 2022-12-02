@@ -1,29 +1,23 @@
-import React, {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import cn from "classnames";
 
 import styles from "./Board.module.scss";
 import { Box } from "./components";
 
-type BoxType = {
+export type BoxType = {
   idx: number;
   color: string;
   borderRadiusTopLeft: string;
   borderRadiusBottomLeft: string;
   borderRadiusTopRight: string;
   borderRadiusBottomRight: string;
-  onClick: (idx: number) => void;
+  onClick: (box: BoxType) => void;
 };
 
 export const Board = () => {
   const [number, setNumber] = useState(Math.floor(Math.random() * 157));
-  const [boxesMap, setBoxesMap] = useState(new Map<number, BoxType>());
+  const [boxesMap] = useState(new Map<number, BoxType>());
 
   useEffect(() => {
     if (number > 10000) {
@@ -31,13 +25,11 @@ export const Board = () => {
     }
     const id = setInterval(() => {
       setNumber((prv) => prv + 157);
-      const box = boxesMap.get(number)!;
+      const box = boxesMap.get(number + 157)!;
       box["color"] = "red";
       setTimeout(() => {
         box["color"] = "";
-        console.log(box);
       }, 100);
-      console.log(box);
     }, 100);
 
     return () => {
@@ -45,7 +37,9 @@ export const Board = () => {
     };
   }, [boxesMap, number]);
 
-  const onBoxClicked = useCallback((idx: number) => {}, [boxesMap, number]);
+  const onBoxClicked = useCallback((box: BoxType) => {
+    box!["color"] = "";
+  }, []);
 
   useEffect(() => {
     [...Array(10000)].map((box, idx) => {
@@ -63,7 +57,7 @@ export const Board = () => {
 
   return (
     <div className={cn("flex-wrap w-100 h-100 flex-center", styles.container)}>
-      {Object.values(boxesMap).map((box) => (
+      {Array.from(boxesMap.values())?.map((box) => (
         <Box {...box} onClick={onBoxClicked} />
       ))}
     </div>
