@@ -1,12 +1,29 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import cn from "classnames";
 
 import styles from "./Board.module.scss";
 import { Box } from "./components";
 
+type BoxType = {
+  idx: number;
+  color: string;
+  borderRadiusTopLeft: string;
+  borderRadiusBottomLeft: string;
+  borderRadiusTopRight: string;
+  borderRadiusBottomRight: string;
+  onClick: (idx: number) => void;
+};
+
 export const Board = () => {
   const [number, setNumber] = useState(Math.floor(Math.random() * 157));
+  const [boxesMap, setBoxesMap] = useState(new Map<number, BoxType>());
 
   useEffect(() => {
     if (number > 10000) {
@@ -14,50 +31,41 @@ export const Board = () => {
     }
     const id = setInterval(() => {
       setNumber((prv) => prv + 157);
+      const box = boxesMap.get(number)!;
+      box["color"] = "red";
+      setTimeout(() => {
+        box["color"] = "";
+        console.log(box);
+      }, 100);
+      console.log(box);
     }, 100);
 
     return () => {
       clearInterval(id);
     };
-  }, [number]);
+  }, [boxesMap, number]);
 
-  const onBoxClicked = useCallback(() => {
-    setNumber(Math.floor(Math.random() * 157));
-  }, []);
+  const onBoxClicked = useCallback((idx: number) => {}, [boxesMap, number]);
 
-  const boardBoxes = useMemo(
-    () =>
-      [...Array(10000)].map((box, idx) => {
-        return (
-          <Box
-            idx={idx}
-            key={idx}
-            color={
-              idx === number ||
-              idx === number + 1 ||
-              idx === number - 1 ||
-              idx === number - 157 ||
-              idx === number + 157 ||
-              idx === number - 158 ||
-              idx === number + 158 ||
-              idx === number - 156 ||
-              idx === number + 156
-                ? "red"
-                : ""
-            }
-            borderRadiusTopLeft={idx === number - 158 ? "15px" : ""}
-            borderRadiusTopRight={idx === number - 156 ? "15px" : ""}
-            borderRadiusBottomLeft={idx === number + 156 ? "15px" : ""}
-            borderRadiusBottomRight={idx === number + 158 ? "15px" : ""}
-            onClick={onBoxClicked}
-          />
-        );
-      }),
-    [number, onBoxClicked]
-  );
+  useEffect(() => {
+    [...Array(10000)].map((box, idx) => {
+      return boxesMap.set(idx, {
+        idx,
+        color: "",
+        borderRadiusTopLeft: "",
+        borderRadiusBottomLeft: "",
+        borderRadiusTopRight: "",
+        borderRadiusBottomRight: "",
+        onClick: onBoxClicked,
+      });
+    });
+  }, [boxesMap, number, onBoxClicked]);
+
   return (
     <div className={cn("flex-wrap w-100 h-100 flex-center", styles.container)}>
-      {boardBoxes}
+      {Object.values(boxesMap).map((box) => (
+        <Box {...box} onClick={onBoxClicked} />
+      ))}
     </div>
   );
 };

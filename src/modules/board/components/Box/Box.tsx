@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import cn from "classnames";
 
@@ -11,27 +11,42 @@ type Props = {
   borderRadiusTopRight: string;
   borderRadiusBottomLeft: string;
   borderRadiusBottomRight: string;
-  onClick: () => void;
+  onClick: (idx: number) => void;
 };
 
-export const Box = ({ idx, color, borderRadiusTopLeft,borderRadiusTopRight,borderRadiusBottomRight,borderRadiusBottomLeft, onClick }: Props) => {
+export const Box = ({
+  idx,
+  color,
+  borderRadiusTopLeft,
+  borderRadiusTopRight,
+  borderRadiusBottomRight,
+  borderRadiusBottomLeft,
+  onClick,
+}: Props) => {
+  const [colorData, setColorData] = useState<string>();
   const onBoxClick = () => {
     if (color) {
-      onClick();
+      onClick(idx);
     }
   };
+
+  //   eff set color data
+  useEffect(() => {
+    console.log(color);
+
+    setColorData(color);
+  }, [color]);
 
   return (
     <div
       className={cn(styles.box, `col-${idx} flex-center`)}
       style={{
-        backgroundColor: color,
-        borderColor: color,
+        backgroundColor: colorData,
+        borderColor: colorData,
         borderTopLeftRadius: borderRadiusTopLeft,
         borderTopRightRadius: borderRadiusTopRight,
         borderBottomLeftRadius: borderRadiusBottomLeft,
         borderBottomRightRadius: borderRadiusBottomRight,
-
       }}
       onClick={onBoxClick}
     >
